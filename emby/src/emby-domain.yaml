@@ -11,6 +11,9 @@ payload:
   - lite.cn2gias.uk
   - lite.liminalnet.com
   - yezi.my
+  - emby.pilipiliultra.com
+  - streamer-cf.pilipiliultra.com
+  - emby2.029902.xyz
 
   # DOMAIN-SUFFIX - 后缀匹配 (使用 +. 前缀)
   - +.apple-cdn.net
