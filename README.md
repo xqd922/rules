@@ -11,11 +11,9 @@ Clash/Mihomo 规则集合
 ```
 rules/
 ├── emby/
-│   ├── emby-domain.mrs    # 自动生成
-│   ├── emby-ip.mrs        # 自动生成
+│   ├── emby-domain.mrs      # 自动生成
 │   └── src/
-│       ├── emby-domain.yaml   # 编辑这个
-│       └── emby-ip.yaml       # 编辑这个
+│       └── emby-domain.yaml # 编辑这个
 ```
 
 ## Emby 规则
@@ -23,7 +21,6 @@ rules/
 | 文件 | 类型 | 说明 |
 |------|------|------|
 | `emby/emby-domain.mrs` | domain | Emby 域名规则 |
-| `emby/emby-ip.mrs` | ipcidr | Emby IP 规则 |
 
 ### 配置示例
 
