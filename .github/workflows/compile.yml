@@ -1,0 +1,52 @@
+name: Compile Rules
+
+on:
+  push:
+    paths:
+      - '**/*.yaml'
+  workflow_dispatch:
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download mihomo
+        run: |
+          wget -q https://github.com/MetaCubeX/mihomo/releases/download/v1.18.10/mihomo-linux-amd64-v1.18.10.gz
+          gzip -d mihomo-linux-amd64-v1.18.10.gz
+          chmod +x mihomo-linux-amd64-v1.18.10
+          mv mihomo-linux-amd64-v1.18.10 mihomo
+
+      - name: Compile YAML to MRS
+        run: |
+          # 查找所有 src 目录下的 yaml 文件并编译
+          find . -path '*/src/*.yaml' -type f | while read yaml_file; do
+            dir=$(dirname $(dirname "$yaml_file"))
+            filename=$(basename "$yaml_file" .yaml)
+
+            # 根据文件名判断类型
+            if [[ "$filename" == *"-ip"* ]] || [[ "$filename" == *"_ip"* ]] || [[ "$filename" == *"ipcidr"* ]]; then
+              behavior="ipcidr"
+            else
+              behavior="domain"
+            fi
+
+            output="$dir/$filename.mrs"
+            echo "Compiling $yaml_file -> $output (behavior: $behavior)"
+            ./mihomo convert-ruleset $behavior yaml "$yaml_file" "$output"
+          done
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: 自动编译 MRS 规则文件"
+            git push
+          fi
