@@ -1,0 +1,43 @@
+payload:
+  # DOMAIN - 精确匹配
+  - cdn.lyrebirdemby.com
+  - sg.886318.xyz
+  - media.micu.hk
+  - tv.811861.xyz
+  - emby.my
+  - embymv.link
+  - emby.feiniul.lol
+  - zoxfree.3767483.xyz
+  - lite.cn2gias.uk
+  - lite.liminalnet.com
+  - yezi.my
+
+  # DOMAIN-SUFFIX - 后缀匹配 (使用 +. 前缀)
+  - +.apple-cdn.net
+  - +.cf.feiyue.lol
+  - +.ch.feiyue.lol
+  - +.jsq.vban.xyz
+  - +.emby.tnx.one
+  - +.misty.cx
+  - +.jh.reddust.link
+  - +.tanhuatv.site
+  - +.mooguu.top
+  - +.lilyemby.my
+  - +.029902.xyz
+  - +.yhemby.top
+  - +.alphatvapp.top
+  - +.emby.awatv.de
+  - +.jsq.mooguu.top
+  - +.sfcj.org
+  - +.hkb-emby.aliz.work
+  - +.onatoshi.114514.quest
+  - +.tufei.de
+  - +.cf.5msky.com
+  - +.oceancloud.asia
+
+  # DOMAIN-KEYWORD - 需要用关键词匹配模式
+  - +emby
+  - +embyvip
+  - +pilipiliultra
+  - +pilipili
+  - +mius
