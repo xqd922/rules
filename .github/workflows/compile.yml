@@ -3,12 +3,16 @@ name: Compile Rules
 on:
   push:
     paths:
-      - '**/src/*.yaml'
-      - 'scripts/**'
+      - '**/src/mihomo/*.yaml'
+      - '**/src/singbox/*.json'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+env:
+  MIHOMO_VERSION: "1.18.10"
+  SINGBOX_VERSION: "1.10.7"
 
 jobs:
   compile:
@@ -17,66 +21,65 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Python dependencies
-        run: pip install pyyaml
-
+      # ========== 下载工具 ==========
       - name: Download mihomo
         run: |
-          wget -q https://github.com/MetaCubeX/mihomo/releases/download/v1.18.10/mihomo-linux-amd64-v1.18.10.gz
-          gzip -d mihomo-linux-amd64-v1.18.10.gz
-          chmod +x mihomo-linux-amd64-v1.18.10
-          mv mihomo-linux-amd64-v1.18.10 mihomo
+          wget -q "https://github.com/MetaCubeX/mihomo/releases/download/v${MIHOMO_VERSION}/mihomo-linux-amd64-v${MIHOMO_VERSION}.gz"
+          gzip -d "mihomo-linux-amd64-v${MIHOMO_VERSION}.gz"
+          chmod +x "mihomo-linux-amd64-v${MIHOMO_VERSION}"
+          mv "mihomo-linux-amd64-v${MIHOMO_VERSION}" mihomo
 
       - name: Download sing-box
         run: |
-          wget -q https://github.com/SagerNet/sing-box/releases/download/v1.10.7/sing-box-1.10.7-linux-amd64.tar.gz
-          tar -xzf sing-box-1.10.7-linux-amd64.tar.gz
-          mv sing-box-1.10.7-linux-amd64/sing-box sing-box
+          wget -q "https://github.com/SagerNet/sing-box/releases/download/v${SINGBOX_VERSION}/sing-box-${SINGBOX_VERSION}-linux-amd64.tar.gz"
+          tar -xzf "sing-box-${SINGBOX_VERSION}-linux-amd64.tar.gz"
+          mv "sing-box-${SINGBOX_VERSION}-linux-amd64/sing-box" sing-box
           chmod +x sing-box
 
-      - name: Compile YAML to MRS and SRS
+      # ========== 编译 Mihomo ==========
+      # 源文件: */src/mihomo/*.yaml
+      # 输出:   */*.mrs
+      # 类型:   默认 domain, 文件名含 -ip 则为 ipcidr
+      - name: Compile Mihomo MRS
         run: |
-          # 查找所有 src 目录下的 yaml 文件并编译
-          find . -path '*/src/*.yaml' -type f | while read yaml_file; do
-            dir=$(dirname $(dirname "$yaml_file"))
-            filename=$(basename "$yaml_file" .yaml)
+          for file in $(find . -path '*/src/mihomo/*.yaml'); do
+            name=$(basename "$file" .yaml)
+            outdir=$(dirname "$(dirname "$(dirname "$file")")")
 
-            # 根据文件名判断类型
-            if [[ "$filename" == *"-ip"* ]] || [[ "$filename" == *"_ip"* ]] || [[ "$filename" == *"ipcidr"* ]]; then
-              behavior="ipcidr"
+            # 判断类型
+            if [[ "$name" == *"-ip"* ]]; then
+              type="ipcidr"
             else
-              behavior="domain"
+              type="domain"
             fi
 
-            # 编译 Mihomo MRS
-            mrs_output="$dir/$filename.mrs"
-            echo "Compiling $yaml_file -> $mrs_output (mihomo, behavior: $behavior)"
-            ./mihomo convert-ruleset $behavior yaml "$yaml_file" "$mrs_output"
-
-            # 转换为 sing-box JSON 并编译 SRS
-            json_output="$dir/$filename.json"
-            srs_output="$dir/$filename.srs"
-            echo "Converting $yaml_file -> $json_output -> $srs_output (sing-box)"
-            python3 scripts/convert-to-singbox.py "$yaml_file" "$json_output" "$behavior"
-            ./sing-box rule-set compile "$json_output" -o "$srs_output"
-
-            # 删除中间 JSON 文件（可选，如果想保留可以注释掉这行）
-            rm -f "$json_output"
+            echo "[$name] $file -> $outdir/$name.mrs ($type)"
+            ./mihomo convert-ruleset "$type" yaml "$file" "$outdir/$name.mrs"
           done
 
+      # ========== 编译 sing-box ==========
+      # 源文件: */src/singbox/*.json
+      # 输出:   */*.srs
+      - name: Compile sing-box SRS
+        run: |
+          for file in $(find . -path '*/src/singbox/*.json'); do
+            name=$(basename "$file" .json)
+            outdir=$(dirname "$(dirname "$(dirname "$file")")")
+
+            echo "[$name] $file -> $outdir/$name.srs"
+            ./sing-box rule-set compile "$file" -o "$outdir/$name.srs"
+          done
+
+      # ========== 提交 ==========
       - name: Commit changes
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
           git add -A
+
           if git diff --staged --quiet; then
-            echo "No changes to commit"
+            echo "No changes"
           else
-            git commit -m "chore: 自动编译 MRS 和 SRS 规则文件"
+            git commit -m "chore: 自动编译规则文件"
             git push
           fi

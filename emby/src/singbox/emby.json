@@ -1,0 +1,60 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "cdn.lyrebirdemby.com",
+        "sg.886318.xyz",
+        "media.micu.hk",
+        "tv.811861.xyz",
+        "emby.my",
+        "embymv.link",
+        "emby.feiniul.lol",
+        "zoxfree.3767483.xyz",
+        "lite.cn2gias.uk",
+        "lite.liminalnet.com",
+        "yezi.my",
+        "emby.pilipiliultra.com",
+        "streamer-cf.pilipiliultra.com",
+        "emby2.029902.xyz",
+        "www.lilyemby.com",
+        "emby.yamo.uk",
+        "emby.heisi.org",
+        "fworks-emby.webn.cc",
+        "okemby.fdemby.de5.net"
+      ]
+    },
+    {
+      "domain_suffix": [
+        "apple-cdn.net",
+        "cf.feiyue.lol",
+        "ch.feiyue.lol",
+        "jsq.vban.xyz",
+        "emby.tnx.one",
+        "misty.cx",
+        "jh.reddust.link",
+        "tanhuatv.site",
+        "mooguu.top",
+        "029902.xyz",
+        "yhemby.top",
+        "alphatvapp.top",
+        "emby.awatv.de",
+        "jsq.mooguu.top",
+        "sfcj.org",
+        "hkb-emby.aliz.work",
+        "onatoshi.114514.quest",
+        "tufei.de",
+        "cf.5msky.com",
+        "oceancloud.asia"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "emby",
+        "embyvip",
+        "pilipiliultra",
+        "mius"
+      ]
+    }
+  ]
+}
