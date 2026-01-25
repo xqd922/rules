@@ -8,6 +8,7 @@
 2. 按格式添加域名
 3. 提交并推送
 4. 等待 GitHub Actions 自动编译（约 1 分钟）
+5. 自动生成 `.mrs` (Mihomo) 和 `.srs` (sing-box) 文件
 
 ## YAML 文件格式
 
@@ -67,9 +68,13 @@ payload:
      - +.claude.ai
    ```
 
-3. 推送后，自动生成 `ai/ai-domain.mrs`
+3. 推送后，自动生成：
+   - `ai/ai-domain.mrs` (Mihomo)
+   - `ai/ai-domain.srs` (sing-box)
 
-4. 在 Clash 配置中使用：
+4. 在配置中使用：
+
+   **Mihomo / Clash.Meta：**
    ```yaml
    rule-providers:
      ai:
@@ -82,6 +87,29 @@ payload:
 
    rules:
      - RULE-SET,ai,AI代理组
+   ```
+
+   **sing-box：**
+   ```json
+   {
+     "route": {
+       "rule_set": [
+         {
+           "tag": "ai",
+           "type": "remote",
+           "format": "binary",
+           "url": "https://raw.githubusercontent.com/xqd922/rules/main/ai/ai-domain.srs",
+           "download_detour": "proxy"
+         }
+       ],
+       "rules": [
+         {
+           "rule_set": "ai",
+           "outbound": "AI代理组"
+         }
+       ]
+     }
+   }
    ```
 
 ## 文件命名规则
@@ -101,16 +129,41 @@ payload:
   - 192.168.0.0/16    # IP 段
 ```
 
+## 输出文件格式
+
+| 格式 | 用途 | 说明 |
+|------|------|------|
+| `.mrs` | Mihomo / Clash.Meta | 二进制格式，体积小，加载快 |
+| `.srs` | sing-box | 二进制格式，sing-box 专用 |
+
 ## 常见问题
 
 ### Q: 推送后多久生效？
-A: GitHub Actions 编译约需 1 分钟，Clash 客户端按 `interval` 设置更新（默认 86400 秒 = 24 小时）。可手动刷新规则提供者立即生效。
+A: GitHub Actions 编译约需 1 分钟，客户端按 `interval` 设置更新（默认 86400 秒 = 24 小时）。可手动刷新规则立即生效。
 
 ### Q: 如何查看 Actions 是否成功？
 A: 访问 https://github.com/xqd922/rules/actions 查看运行状态。
 
 ### Q: DOMAIN-KEYWORD 怎么写？
-A: `.mrs` 格式不支持 DOMAIN-KEYWORD，需要在 Clash 配置中单独写内联规则。
+A: `.mrs` 和 `.srs` 格式均不支持 DOMAIN-KEYWORD，需要在客户端配置中单独写内联规则：
+
+**Mihomo：**
+```yaml
+rules:
+  - DOMAIN-KEYWORD,emby,Emby
+```
+
+**sing-box：**
+```json
+{
+  "rules": [
+    {
+      "domain_keyword": ["emby"],
+      "outbound": "Emby"
+    }
+  ]
+}
+```
 
 ### Q: 格式写错了怎么办？
 A: Actions 会编译失败，查看日志修正后重新推送即可。

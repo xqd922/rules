@@ -3,7 +3,8 @@ name: Compile Rules
 on:
   push:
     paths:
-      - '**/*.yaml'
+      - '**/src/*.yaml'
+      - 'scripts/**'
   workflow_dispatch:
 
 permissions:
@@ -16,6 +17,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pyyaml
+
       - name: Download mihomo
         run: |
           wget -q https://github.com/MetaCubeX/mihomo/releases/download/v1.18.10/mihomo-linux-amd64-v1.18.10.gz
@@ -23,7 +32,14 @@ jobs:
           chmod +x mihomo-linux-amd64-v1.18.10
           mv mihomo-linux-amd64-v1.18.10 mihomo
 
-      - name: Compile YAML to MRS
+      - name: Download sing-box
+        run: |
+          wget -q https://github.com/SagerNet/sing-box/releases/download/v1.10.7/sing-box-1.10.7-linux-amd64.tar.gz
+          tar -xzf sing-box-1.10.7-linux-amd64.tar.gz
+          mv sing-box-1.10.7-linux-amd64/sing-box sing-box
+          chmod +x sing-box
+
+      - name: Compile YAML to MRS and SRS
         run: |
           # 查找所有 src 目录下的 yaml 文件并编译
           find . -path '*/src/*.yaml' -type f | while read yaml_file; do
@@ -37,9 +53,20 @@ jobs:
               behavior="domain"
             fi
 
-            output="$dir/$filename.mrs"
-            echo "Compiling $yaml_file -> $output (behavior: $behavior)"
-            ./mihomo convert-ruleset $behavior yaml "$yaml_file" "$output"
+            # 编译 Mihomo MRS
+            mrs_output="$dir/$filename.mrs"
+            echo "Compiling $yaml_file -> $mrs_output (mihomo, behavior: $behavior)"
+            ./mihomo convert-ruleset $behavior yaml "$yaml_file" "$mrs_output"
+
+            # 转换为 sing-box JSON 并编译 SRS
+            json_output="$dir/$filename.json"
+            srs_output="$dir/$filename.srs"
+            echo "Converting $yaml_file -> $json_output -> $srs_output (sing-box)"
+            python3 scripts/convert-to-singbox.py "$yaml_file" "$json_output" "$behavior"
+            ./sing-box rule-set compile "$json_output" -o "$srs_output"
+
+            # 删除中间 JSON 文件（可选，如果想保留可以注释掉这行）
+            rm -f "$json_output"
           done
 
       - name: Commit changes
@@ -50,6 +77,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore: 自动编译 MRS 规则文件"
+            git commit -m "chore: 自动编译 MRS 和 SRS 规则文件"
             git push
           fi
