@@ -70,12 +70,18 @@ jobs:
             ./sing-box rule-set compile "$file" -o "$outdir/$name.srs"
           done
 
-      # ========== 提交 ==========
+      # ========== 清理并提交 ==========
+      - name: Cleanup tools
+        run: |
+          rm -rf mihomo sing-box sing-box-*.tar.gz sing-box-*/
+
       - name: Commit changes
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-          git add -A
+
+          # 只添加规则文件
+          git add "**/*.mrs" "**/*.srs"
 
           if git diff --staged --quiet; then
             echo "No changes"
