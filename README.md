@@ -8,34 +8,20 @@ Clash/Mihomo 和 sing-box 规则集合
 emby/
 ├── src/
 │   ├── mihomo/
-│   │   └── emby.yaml           # Mihomo 源文件
+│   │   └── emby.yaml       # Mihomo 源文件
 │   └── singbox/
-│       └── emby.json           # sing-box 源文件
-├── emby.mrs                    # Mihomo 输出
-└── emby.srs                    # sing-box 输出
+│       └── emby.json       # sing-box 源文件
+├── emby.mrs                # Mihomo 输出
+└── emby.srs                # sing-box 输出
 ```
-
-## 快速开始
-
-- **Mihomo**：编辑 `*/src/mihomo/*.yaml` → 推送 → 自动编译为 `.mrs`
-- **sing-box**：编辑 `*/src/singbox/*.json` → 推送 → 自动编译为 `.srs`
 
 ## 当前规则
 
-| 规则 | Mihomo (MRS) | sing-box (SRS) |
-|------|--------------|----------------|
+| 规则 | Mihomo | sing-box |
+|------|--------|----------|
 | Emby | [emby.mrs](https://raw.githubusercontent.com/xqd922/rules/main/emby/emby.mrs) | [emby.srs](https://raw.githubusercontent.com/xqd922/rules/main/emby/emby.srs) |
 
-## 格式差异
-
-| 规则类型 | Mihomo MRS | sing-box SRS |
-|----------|------------|--------------|
-| DOMAIN | ✅ | ✅ |
-| DOMAIN-SUFFIX | ✅ | ✅ |
-| DOMAIN-KEYWORD | ❌ | ✅ |
-| IP-CIDR | ✅ | ✅ |
-
-## 配置示例
+## 快速使用
 
 ### Mihomo / Clash.Meta
 
@@ -63,8 +49,7 @@ rules:
         "tag": "emby",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/xqd922/rules/main/emby/emby.srs",
-        "download_detour": "proxy"
+        "url": "https://raw.githubusercontent.com/xqd922/rules/main/emby/emby.srs"
       }
     ],
     "rules": [
@@ -77,6 +62,30 @@ rules:
 }
 ```
 
-## 详细文档
+## 格式差异
 
-- [使用指南](docs/usage.md)
+| 规则类型 | Mihomo MRS | sing-box SRS |
+|----------|------------|--------------|
+| DOMAIN | ✅ | ✅ |
+| DOMAIN-SUFFIX | ✅ | ✅ |
+| DOMAIN-KEYWORD | ❌ | ✅ |
+| DOMAIN-REGEX | ❌ | ✅ |
+| IP-CIDR | ✅ | ✅ |
+| 混合规则 | ❌ | ✅ |
+
+## 文档
+
+- [Mihomo 使用指南](docs/mihomo.md) - 完整的 Mihomo 配置说明
+- [sing-box 使用指南](docs/singbox.md) - 完整的 sing-box 配置说明
+
+## 添加规则
+
+1. 编辑对应的源文件
+   - Mihomo: `*/src/mihomo/*.yaml`
+   - sing-box: `*/src/singbox/*.json`
+2. 提交并推送
+3. GitHub Actions 自动编译
+
+## 查看编译状态
+
+https://github.com/xqd922/rules/actions
