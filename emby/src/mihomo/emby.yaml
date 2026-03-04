@@ -19,11 +19,11 @@ payload:
   - emby.heisi.org
   - fworks-emby.webn.cc
   - okemby.fdemby.de5.net
+  - cflocal.xxlb.net
   
 
   # DOMAIN-SUFFIX - 后缀匹配 (使用 +. 前缀)
   - +.apple-cdn.net
-  - +.cf.feiyue.lol
   - +.ch.feiyue.lol
   - +.jsq.vban.xyz
   - +.emby.tnx.one
