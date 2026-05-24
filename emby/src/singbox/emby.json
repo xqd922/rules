@@ -21,14 +21,17 @@
         "emby.yamo.uk",
         "emby.heisi.org",
         "fworks-emby.webn.cc",
-        "okemby.fdemby.de5.net"
+        "okemby.fdemby.de5.net",
+        "cflocal.xxlb.net",
+        "emby.bangumi.ca",
+        "public.shrekmedia.org",
+        "test.inemby.us.ci"
       ]
     },
     {
       "domain_suffix": [
         "apple-cdn.net",
-        "cf.feiyue.lol",
-        "ch.feiyue.lol",
+        "feiyue.lol",
         "jsq.vban.xyz",
         "emby.tnx.one",
         "misty.cx",
@@ -45,7 +48,12 @@
         "onatoshi.114514.quest",
         "tufei.de",
         "cf.5msky.com",
-        "oceancloud.asia"
+        "oceancloud.asia",
+        "pilipiliultra.com",
+        "sadchicktv.com",
+        "echoflix.de",
+        "embyplus.org",
+        "faemby.vip"
       ]
     },
     {

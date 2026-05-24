@@ -15,11 +15,14 @@ payload:
   - fworks-emby.webn.cc
   - okemby.fdemby.de5.net
   - cflocal.xxlb.net
+  - emby.bangumi.ca
+  - public.shrekmedia.org
+  - test.inemby.us.ci
   
 
   # DOMAIN-SUFFIX - 后缀匹配 (使用 +. 前缀)
   - +.apple-cdn.net
-  - +.ch.feiyue.lol
+  - +.feiyue.lol
   - +.jsq.vban.xyz
   - +.emby.tnx.one
   - +.misty.cx
@@ -39,3 +42,7 @@ payload:
   - +.oceancloud.asia
   - +.pilipiliultra.com
   - +.sadchicktv.com
+  - +.echoflix.de
+  - +.embyplus.org
+  - +.faemby.vip
+  
