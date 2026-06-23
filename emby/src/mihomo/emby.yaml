@@ -21,7 +21,6 @@ payload:
   
 
   # DOMAIN-SUFFIX - 后缀匹配 (使用 +. 前缀)
-  - +.apple-cdn.net
   - +.feiyue.lol
   - +.jsq.vban.xyz
   - +.emby.tnx.one
