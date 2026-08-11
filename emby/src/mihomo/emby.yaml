@@ -10,7 +10,6 @@ payload:
   - lite.cn2gias.uk
   - lite.liminalnet.com
   - emby2.029902.xyz
-  - www.lilyemby.com
   - emby.heisi.org
   - fworks-emby.webn.cc
   - okemby.fdemby.de5.net
@@ -18,6 +17,7 @@ payload:
   - emby.bangumi.ca
   - public.shrekmedia.org
   - test.inemby.us.ci
+  - speedtest-babybus.apple-cdn.net
   
 
   # DOMAIN-SUFFIX - 后缀匹配 (使用 +. 前缀)
@@ -44,4 +44,5 @@ payload:
   - +.echoflix.de
   - +.embyplus.org
   - +.faemby.vip
+  - +.biliblili.uk
   
